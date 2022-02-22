@@ -5,7 +5,8 @@ import (
 	"flag"
 	"fmt"
 	"log"
-	"mail2/service/common"
+	"mail/service/common"
+
 	//"test/grpc_test/common"
 	"time"
 

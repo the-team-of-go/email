@@ -4,13 +4,14 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"log"
+	"mail/service/common"
+	"net"
+	"net/smtp"
+
 	"github.com/jordan-wright/email"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
-	"log"
-	"mail2/service/common"
-	"net"
-	"net/smtp"
 	//"test/grpc_test/common"
 )
 
@@ -54,7 +55,7 @@ func (s *server) SendEmail(ctx context.Context, request *common.GetEmailRequest)
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println(sender,"sent successfully ... ")
+	log.Println(sender, "sent successfully ... ")
 
 	return &common.GetEmailResponse{Code: 0, Info: "sending success"}, nil
 }
