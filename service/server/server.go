@@ -73,7 +73,7 @@ func main() {
 	//listen, err := net.Listen("tcp", fmt.Sprintf("10.243.105.17:%d", *port))
 	listen, err := net.Listen("tcp", fmt.Sprintf("localhost:%d", *port))
 	if err != nil {
-		log.Fatal("failed to listen: %v", err)
+		log.Fatalf("failed to listen: %v", err)
 	}
 	s := grpc.NewServer()
 	common.RegisterEmailServiceServer(s, &server{})
