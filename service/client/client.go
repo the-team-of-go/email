@@ -13,7 +13,6 @@ import (
 )
 
 var (
-	//addr = flag.String("addr", "localhost:8181", "the address to connect to")
 	addr = flag.String("addr", "localhost:8181", "the address to connect to")
 )
 
@@ -35,10 +34,12 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 	r, err := c.SendEmail(ctx, &common.GetEmailRequest{
+		Timestamp: time.Now().Unix(),
 		Sender:    "1834960035@qq.com",
 		Recipient: "stackoverflow520@163.com",
 		CpuUsed:   "%30",
 		MemUsed:   "%40",
+		DiskUsed:  "20%",
 		Grade:     "serious",
 	})
 	if err != nil {

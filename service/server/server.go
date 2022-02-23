@@ -11,6 +11,7 @@ import (
 	"mail2/service/common"
 	"net"
 	"net/smtp"
+	"time"
 	//"test/grpc_test/common"
 )
 
@@ -27,12 +28,14 @@ type server struct {
 }
 
 func (s *server) SendEmail(ctx context.Context, request *common.GetEmailRequest) (*common.GetEmailResponse, error) {
-
+	timestamp := request.Timestamp //报警时间搓
+	moment := time.Unix(timestamp, 0).Format("2006-01-02  15:04:05")
 	sender := request.Sender
 	recipient := request.Recipient
-	cpuUsed := request.CpuUsed //cpu使用情况
-	memUsed := request.MemUsed //内存使用情况
-	grade := request.Grade     //报警等级
+	cpuUsed := request.CpuUsed   //cpu使用情况
+	memUsed := request.MemUsed   //内存使用情况
+	diskUsed := request.DiskUsed //磁盘使用情况
+	grade := request.Grade       //报警等级
 	// 简单设置 log 参数
 	log.SetFlags(log.Lshortfile | log.LstdFlags)
 	em := email.NewEmail()
@@ -42,11 +45,10 @@ func (s *server) SendEmail(ctx context.Context, request *common.GetEmailRequest)
 	em.To = []string{recipient}
 
 	// 发送内容
-	//em.Subject = fmt.Sprintf("Warning:The system monitoring and forecast level is %v", grade)
-	em.Subject = fmt.Sprintf("Warning:The forecast level is %v", grade)
+	em.Subject = fmt.Sprintf("Warning:The system monitoring and forecast level is %v", grade)
 	// 简单设置文件发送的内容，暂时设置成纯文本
-	content := fmt.Sprintf("The occupancy of the system cpu is:%v ;"+
-		" the occupancy of the system memory is %v", cpuUsed, memUsed)
+	content := fmt.Sprintf("%v : The occupancy of the system cpu is:%v ;"+
+		" the occupancy of the system memory is %v ，the occupancy of the disk is %v", moment, cpuUsed, memUsed, diskUsed)
 	em.Text = []byte(content)
 
 	//设置服务器相关的配置
@@ -54,7 +56,7 @@ func (s *server) SendEmail(ctx context.Context, request *common.GetEmailRequest)
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println(sender,"sent successfully ... ")
+	log.Println(sender + "  sent to " + recipient + " successfully ... ")
 
 	return &common.GetEmailResponse{Code: 0, Info: "sending success"}, nil
 }
@@ -69,8 +71,7 @@ func (s *server) SendEmail(ctx context.Context, request *common.GetEmailRequest)
 }*/
 
 func main() {
-	//listen, err := net.Listen("tcp", fmt.Sprintf("10.243.105.17:%d", *port))
-	listen, err := net.Listen("tcp", fmt.Sprintf("localhost:%d", *port))
+	listen, err := net.Listen("tcp", fmt.Sprintf("10.243.105.17:%d", *port))
 	if err != nil {
 		log.Fatal("failed to listen: %v", err)
 	}
