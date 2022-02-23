@@ -4,14 +4,18 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"log"
+	"mail/service/common"
+	"net"
+	"net/smtp"
+<<<<<<< HEAD
+	"time"
+=======
+
 	"github.com/jordan-wright/email"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
-	"log"
-	"mail2/service/common"
-	"net"
-	"net/smtp"
-	"time"
+>>>>>>> b438c0427262de17de2934d31c774087eca83d11
 	//"test/grpc_test/common"
 )
 
@@ -56,7 +60,11 @@ func (s *server) SendEmail(ctx context.Context, request *common.GetEmailRequest)
 	if err != nil {
 		log.Fatal(err)
 	}
+<<<<<<< HEAD
 	log.Println(sender + "  sent to " + recipient + " successfully ... ")
+=======
+	log.Println(sender, "sent successfully ... ")
+>>>>>>> b438c0427262de17de2934d31c774087eca83d11
 
 	return &common.GetEmailResponse{Code: 0, Info: "sending success"}, nil
 }
@@ -73,7 +81,7 @@ func (s *server) SendEmail(ctx context.Context, request *common.GetEmailRequest)
 func main() {
 	listen, err := net.Listen("tcp", fmt.Sprintf("10.243.105.17:%d", *port))
 	if err != nil {
-		log.Fatal("failed to listen: %v", err)
+		log.Fatalf("failed to listen: %v", err)
 	}
 	s := grpc.NewServer()
 	common.RegisterEmailServiceServer(s, &server{})
